@@ -1,0 +1,28 @@
+[project]
+name = "fig-aime-2026"
+version = "0.1.0"
+description = "Python environment for the pipeline that regenerates the FIG AIME-2026 figure inputs."
+requires-python = ">=3.12,<3.15"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "torch",
+    # The FIG metric library (imported as `fig`), from PyPI.
+    "fractional-information-gain",
+]
+
+[tool.uv]
+# This repo is a set of scripts, not an installable package -- only manage the env.
+package = false
+
+[tool.uv.sources]
+# On all of Linux, torch comes from the CPU-only index: CPU wheels suffice for this
+# pipeline, and the default aarch64 CUDA wheels were broken when this was pinned.
+# macOS/Windows resolve torch normally from PyPI.
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
